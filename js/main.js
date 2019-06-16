@@ -20,12 +20,6 @@ document.body.onload = () => {
         pos.lat = +urlParams.get('lat')
         pos.lng = +urlParams.get('lng')
 
-        initMapWithPos(pos)
-        updateWeather(pos)
-        mapService.addressLookup(pos)
-            .then(address => {
-                document.querySelector('h1').innerText = address
-            })
     } else {
         pos = locService.getPosition().then((pos) => {
             console.log('init with get pos');
