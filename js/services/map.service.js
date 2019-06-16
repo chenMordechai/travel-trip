@@ -46,7 +46,7 @@ function panTo(lat, lng) {
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()
-    const API_KEY = 'AIzaSyDg8EFZZ2HBS2X6aqRzwRwfEbPO9SJLPfc';
+    const API_KEY = 'AIzaSyCFjP_SMFTmoUS7GymW7at3QQVtZWUC7mU';
     // const API_KEY = '';
     var elGoogleApi = document.createElement('script');
     elGoogleApi.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}`;

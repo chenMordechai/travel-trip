@@ -3,8 +3,7 @@ console.log('Main!');
 import locService from './services/loc.service.js'
 import mapService from './services/map.service.js'
 import weatherService from './services/weather.service.js'
-
-
+import utils from './services/util.service.js'
 
 
 
@@ -12,6 +11,30 @@ import weatherService from './services/weather.service.js'
 //     .then(locs => console.log('locs', locs))
 
 document.body.onload = () => {
+
+    const urlParams = new URLSearchParams(window.location.search)
+    console.log('urlParams :', urlParams);
+    let pos = {}
+    if (urlParams.has('lat') && urlParams.has('lng')) {
+        console.log('init with url');
+        pos.lat = +urlParams.get('lat')
+        pos.lng = +urlParams.get('lng')
+
+        initMapWithPos(pos)
+        updateWeather(pos)
+        mapService.addressLookup(pos)
+            .then(address => {
+                document.querySelector('h1').innerText = address
+            })
+    } else {
+        pos = locService.getPosition().then((pos) => {
+            console.log('init with get pos');
+            
+        }).catch((err) => {
+            console.log('error!');
+        });
+    }
+
     mapService.initMap()
         .then(
             locService.getPosition()
@@ -27,15 +50,17 @@ document.body.onload = () => {
                     lng: pos.coords.longitude
                 }
                 locService.getCityByCoords(pos.coords.latitude, pos.coords.longitude)
-                    .then(renderCityName)
-
+                .then(renderCityName)
+                
                 weatherService.getWeather(pos.coords.latitude, pos.coords.longitude)
-                    .then(renderWeather)
+                .then(renderWeather)
             })
-
-
-
-        )
+            
+            
+            
+            )
+            document.querySelector('.btn-search').onclick = onSearch
+            document.querySelector('.btn-copy').addEventListener('click', copyLocation)
 }
 
 // document.querySelector('.btn1').onclick =  () => {
@@ -60,14 +85,13 @@ document.querySelector('.btn-my-location').addEventListener('click', (ev) => {
                 lng: pos.coords.longitude
             }
             locService.getCityByCoords(pos.coords.latitude, pos.coords.longitude)
-                .then(renderCityName)
+            .then(renderCityName)
             weatherService.getWeather(pos.coords.latitude, pos.coords.longitude)
-                .then(renderWeather)
+            .then(renderWeather)
         })
-})
-
-
-document.querySelector('.btn-search').onclick = onSearch
+    })
+    
+    
 
 function onSearch() {
     var city = document.querySelector('.search').value
@@ -116,16 +140,18 @@ function renderWeather(weather) {
 
 }
 
-document.querySelector('.btn-copy').onclick = copyLocation
 
 function copyLocation() {
-    console.log('copy location')
-    var lat = locService.currrCoords.lat
-    var lng = locService.currrCoords.lng
-    console.log(lat, lng)
-    var url = `github.io/travelTip/index.html?lat=${lat}&lng=${lng}`
+    // console.log(locService.currrCoords)
+     
+    locService.getPosition()
+        .then(pos => {
+            console.log(pos)
+            const URL = `https://chenmordechai.github.io/travel-trip?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}`
+            return URL
+        }).then(URL => {
+            utils.copyStringToClipboard(URL)
+        })
 
-    url.select()
-    document.execCommand("copy");
-    alert("Copied the text: " + url);
+        // https://chenmordechai.github.io/travel-trip/
 }
