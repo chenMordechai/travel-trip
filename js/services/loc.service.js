@@ -24,7 +24,7 @@ function getLocs() {
 
 
 function getPosition() {
-    console.log('Getting Pos');
+    // console.log('Getting Pos');
     
     return new Promise((resolve, reject)=>{
         navigator.geolocation.getCurrentPosition(resolve, reject)
@@ -51,7 +51,7 @@ function getCoordsByCity(city){
     var prmRes = axios.get(url + API_KEY)
     var prmData= prmRes.then(res =>{
         var coords = res.data.results[0].geometry.location
-        console.log('cord',res.data.results)
+        // console.log('cord',res.data.results)
          return coords
      })
      return prmData

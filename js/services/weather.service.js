@@ -16,7 +16,7 @@ function getWeather(lat,lng){
         var icon = res.data.weather[0].icon
         var wind =Math.floor(res.data.wind.speed*3.6) + 'k/h'
         var weather = {name,main ,description,temp ,tempMax,tempMin ,wind, icon}
-        console.log('weather',temp)
+        // console.log('weather',temp)
          return weather
      })
      return prmData

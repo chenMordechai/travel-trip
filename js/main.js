@@ -1,4 +1,4 @@
-console.log('Main!');
+// console.log('Main!');
 
 import locService from './services/loc.service.js'
 import mapService from './services/map.service.js'
@@ -13,25 +13,26 @@ import utils from './services/util.service.js'
 document.body.onload = () => {
 
     const urlParams = new URLSearchParams(window.location.search)
-    console.log('urlParams :', urlParams);
+    // console.log('urlParams :', urlParams);
     let pos = {}
     if (urlParams.has('lat') && urlParams.has('lng')) {
-        console.log('init with url');
+        // console.log('init with url');
         pos.lat = +urlParams.get('lat')
         pos.lng = +urlParams.get('lng')
 
     } else {
         pos = locService.getPosition().then((pos) => {
-            console.log('init with get pos');
+            // console.log('init with get pos');
             
         }).catch((err) => {
             console.log('error!');
         });
     }
-
+    
     mapService.initMap()
-        .then(
-            locService.getPosition()
+        // .then(
+        //     locService.getPosition()
+        .then(() => locService.getPosition())
             .then(pos => {
                 // console.log('User position is:', pos.coords);
                 mapService.panTo(pos.coords.latitude, pos.coords.longitude)
@@ -52,7 +53,7 @@ document.body.onload = () => {
             
             
             
-            )
+            // )
             document.querySelector('.btn-search').onclick = onSearch
             document.querySelector('.btn-copy').addEventListener('click', copyLocation)
 }
@@ -89,10 +90,10 @@ document.querySelector('.btn-my-location').addEventListener('click', (ev) => {
 
 function onSearch() {
     var city = document.querySelector('.search').value
-    console.log('the city in search', city)
+    // console.log('the city in search', city)
     locService.getCoordsByCity(city)
         .then(coords => {
-            console.log('coords in the search', coords.lat, coords.lng)
+            // console.log('coords in the search', coords.lat, coords.lng)
             mapService.panTo(coords.lat, coords.lng)
             mapService.addMarker({
                 lat: coords.lat,
@@ -103,7 +104,7 @@ function onSearch() {
                 lng: coords.lng
             }
             renderCityName(city)
-            console.log('hear!', coords)
+            // console.log('hear!', coords)
             weatherService.getWeather(coords.lat, coords.lng)
                 .then(renderWeather)
         })
@@ -112,12 +113,12 @@ function onSearch() {
 
 
 function renderCityName(cityName) {
-    console.log(cityName)
+    // console.log(cityName)
     document.querySelector('.city-name').innerHTML = 'location:' + cityName
 }
 
 function renderWeather(weather) {
-    console.log(weather)
+    // console.log(weather)
     var strHtml = `<h2> weather today </h2>
 
   <img src="img/${weather.icon}.png" alt="">
@@ -135,17 +136,12 @@ function renderWeather(weather) {
 }
 
 
-function copyLocation() {
-    // console.log(locService.currrCoords)
-     
+function copyLocation() {     
     locService.getPosition()
         .then(pos => {
-            console.log(pos)
             const URL = `https://chenmordechai.github.io/travel-trip?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}`
             return URL
         }).then(URL => {
             utils.copyStringToClipboard(URL)
         })
-
-        // https://chenmordechai.github.io/travel-trip/
 }
